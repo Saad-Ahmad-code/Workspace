@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Playlist Player</title>
     <link rel="stylesheet" href="amacss.css">
+    <style>
+        body { margin: 0; padding: 0; }
+        video { display: block; }
+    </style>
 </head>
 
 <body style="background-color: black;">
@@ -37,7 +41,7 @@
                 <h1>My Playlist</h1>
             </div>
 
-            <video id="myVideo" width="900" muted autoplay preload="auto"></video>
+            <video id="myVideo" width="900" muted autoplay preload="metadata"></video>
 
             <div class="controls">
                 <button id="playPause" class="control-btn play-btn">⏸</button>
@@ -47,7 +51,7 @@
                 <button id="next" class="control-btn">Next ▶</button>
             </div> 
 
-            <script>
+            <script defer>
                 const video = document.getElementById('myVideo');
                 const playPause = document.getElementById('playPause');
                 const progress = document.getElementById('progress');
@@ -75,22 +79,29 @@
 
                 let currentIndex = 0;
                 let isMuted = true;
+                let playStarted = false;
 
-                // Initialize video
+                // Initialize video with cached references
                 function loadVideo(index) {
                     video.src = playlist[index];
-                    video.load();
                 }
 
+                // Load first video immediately
                 loadVideo(currentIndex);
 
-                // Auto-play video when metadata is loaded
+                // Auto-play video when ready
                 video.addEventListener('canplay', () => {
-                    video.play();
-                });
+                    if (!playStarted) {
+                        playStarted = true;
+                        video.play().catch(() => {
+                            console.log('Autoplay prevented by browser policy');
+                        });
+                    }
+                }, { once: true });
 
-                // Sidebar click handling
-                document.querySelectorAll('.sidebar a').forEach(link => {
+                // Sidebar click handling - delegated
+                const sidebarLinks = document.querySelectorAll('.sidebar a');
+                sidebarLinks.forEach(link => {
                     link.addEventListener('click', (e) => {
                         e.preventDefault();
                         currentIndex = parseInt(link.getAttribute('data-index'));
@@ -111,11 +122,15 @@
                     }
                 });
 
-                // Update progress bar
+                // Update progress bar - throttled
+                let updateTimeout;
                 video.addEventListener('timeupdate', () => {
-                    if (video.duration) {
-                        progress.value = (video.currentTime / video.duration) * 100;
-                    }
+                    clearTimeout(updateTimeout);
+                    updateTimeout = setTimeout(() => {
+                        if (video.duration) {
+                            progress.value = (video.currentTime / video.duration) * 100;
+                        }
+                    }, 100);
                 });
 
                 // Seek on progress bar input
