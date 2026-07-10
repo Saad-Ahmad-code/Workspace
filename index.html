@@ -33,104 +33,130 @@
         <div class="content" style="background-color: black;">
             <h1>Music Player</h1>
 
-    <div class="navbar">
-        <h1 >My Playlist</h1>
-    </div>
+            <div class="navbar">
+                <h1>My Playlist</h1>
+            </div>
 
-    <video id="myVideo" width="900" autoplay preload="metadata"</video>
+            <video id="myVideo" width="900" muted autoplay preload="auto"></video>
 
-    <div class="controls">
-        <button id="playPause" class="control-btn play-btn">⏸</button>
-        <input type="range" id="progress" value="0" max="100">
-        <button id="mute" class="control-btn">Mute</button>
-        <button id="fullscreen" class="control-btn">Fullscreen</button>
-        <button id="next" class="control-btn">Next ▶</button>
-    </div> 
+            <div class="controls">
+                <button id="playPause" class="control-btn play-btn">⏸</button>
+                <input type="range" id="progress" value="0" max="100">
+                <button id="mute" class="control-btn">🔊 Mute</button>
+                <button id="fullscreen" class="control-btn">Fullscreen</button>
+                <button id="next" class="control-btn">Next ▶</button>
+            </div> 
 
-    <script>
-        const video = document.getElementById('myVideo');
-        const playPause = document.getElementById('playPause');
-        const progress = document.getElementById('progress');
-        const mute = document.getElementById('mute');
-        const fullscreen = document.getElementById('fullscreen');
-        const next = document.getElementById('next');
+            <script>
+                const video = document.getElementById('myVideo');
+                const playPause = document.getElementById('playPause');
+                const progress = document.getElementById('progress');
+                const mute = document.getElementById('mute');
+                const fullscreen = document.getElementById('fullscreen');
+                const next = document.getElementById('next');
 
-        // 🎵 Playlist
-        const playlist = [
-            "Jhol _ Coke Studio Pakistan _ Season 15 _ Maanu x Annural Khalid.mp4",
-            "Udaarian (Badi lambi hai kahani mere pyaar di) - Satinder Sartaaj _ Love Songs _ New Punjabi Songs.mp4",
-            "Midnight Call (Official Video) - Harkirat Sangha _ Starboy X _ Rupan Bal _ Interstellar 2025.mp4",
-            "MEMORIES - Hasan Raheem ft Justin Bibis (Official Music Video) _ Latest Urdu Punjabi Song 2025.mp4",
-            "Anuv Jain - HUSN (Official Video).mp4",
-            "Aditya Rikhari - Paaro (Official Video).mp4",
-            "Aditya Rikhari - SAMJHO NA ( NASAMAJH ).mp4",
-            "Finding Her (Jana Mere Sawalon Ka Manzar Tu) _ Kushagra _ Vanshika _ Bharath _ Karan Maini _UR Debut.mp4",
-            "Sahiba (Official Music Video) _ Aditya Rikhari, Ankita Chhetri _ T-Series.mp4",
-            "Anuv Jain - INAAM (Official Lyrical Video).mp4",
-            "Anuv Jain - AFSOS ft. AP Dhillon (Official Visualizer).mp4",
-            "Dil Diyan Gallan Song _ Tiger Zinda Hai _ Salman Khan, Katrina Kaif _ Atif Aslam _ Vishal & Shekhar.mp4",
-            "Khasara – Abdul Hannan & Samar Jafri (Official Audio).mp4",
-            "BOYFRIEND(MUSIC VIDEO) KARAN AUJLA_ SUNANDA _ IKKY _ Latest Punjabi Songs 2025.mp4"
-        ];
+                // 🎵 Playlist
+                const playlist = [
+                    "Jhol _ Coke Studio Pakistan _ Season 15 _ Maanu x Annural Khalid.mp4",
+                    "Udaarian (Badi lambi hai kahani mere pyaar di) - Satinder Sartaaj _ Love Songs _ New Punjabi Songs.mp4",
+                    "Midnight Call (Official Video) - Harkirat Sangha _ Starboy X _ Rupan Bal _ Interstellar 2025.mp4",
+                    "MEMORIES - Hasan Raheem ft Justin Bibis (Official Music Video) _ Latest Urdu Punjabi Song 2025.mp4",
+                    "Anuv Jain - HUSN (Official Video).mp4",
+                    "Aditya Rikhari - Paaro (Official Video).mp4",
+                    "Aditya Rikhari - SAMJHO NA ( NASAMAJH ).mp4",
+                    "Finding Her (Jana Mere Sawalon Ka Manzar Tu) _ Kushagra _ Vanshika _ Bharath _ Karan Maini _UR Debut.mp4",
+                    "Sahiba (Official Music Video) _ Aditya Rikhari, Ankita Chhetri _ T-Series.mp4",
+                    "Anuv Jain - INAAM (Official Lyrical Video).mp4",
+                    "Anuv Jain - AFSOS ft. AP Dhillon (Official Visualizer).mp4",
+                    "Dil Diyan Gallan Song _ Tiger Zinda Hai _ Salman Khan, Katrina Kaif _ Atif Aslam _ Vishal & Shekhar.mp4",
+                    "Khasara – Abdul Hannan & Samar Jafri (Official Audio).mp4",
+                    "BOYFRIEND(MUSIC VIDEO) KARAN AUJLA_ SUNANDA _ IKKY _ Latest Punjabi Songs 2025.mp4"
+                ];
 
-        let currentIndex = 0;
-        video.src = playlist[currentIndex];
+                let currentIndex = 0;
+                let isMuted = true;
 
-        // Sidebar click handling
-        document.querySelectorAll('.sidebar a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault(); // stop page reload
-                currentIndex = parseInt(link.getAttribute('data-index'));
-                video.src = playlist[currentIndex];
-                video.play();
-                playPause.textContent = '⏸';
-            });
-        });
+                // Initialize video
+                function loadVideo(index) {
+                    video.src = playlist[index];
+                    video.load();
+                }
 
-        // Existing controls...
-        playPause.addEventListener('click', () => {
-            if (video.paused) {
-                video.play();
-                playPause.textContent = '⏸';
-            } else {
-                video.pause();
-                playPause.textContent = '▶';
-            }
-        });
+                loadVideo(currentIndex);
 
-        video.addEventListener('timeupdate', () => {
-            progress.value = (video.currentTime / video.duration) * 100;
-        });
+                // Sidebar click handling
+                document.querySelectorAll('.sidebar a').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        currentIndex = parseInt(link.getAttribute('data-index'));
+                        loadVideo(currentIndex);
+                        video.play();
+                        playPause.textContent = '⏸';
+                    });
+                });
 
-        progress.addEventListener('input', () => {
-            video.currentTime = (progress.value / 100) * video.duration;
-        });
+                // Play/Pause
+                playPause.addEventListener('click', () => {
+                    if (video.paused) {
+                        video.play();
+                        playPause.textContent = '⏸';
+                    } else {
+                        video.pause();
+                        playPause.textContent = '▶';
+                    }
+                });
 
-        mute.addEventListener('click', () => {
-            video.muted = !video.muted;
-        });
+                // Update progress bar
+                video.addEventListener('timeupdate', () => {
+                    if (video.duration) {
+                        progress.value = (video.currentTime / video.duration) * 100;
+                    }
+                });
 
-        fullscreen.addEventListener('click', () => {
-            if (video.requestFullscreen) {
-                video.requestFullscreen();
-            }
-        });
+                // Seek on progress bar input
+                progress.addEventListener('input', () => {
+                    if (video.duration) {
+                        video.currentTime = (progress.value / 100) * video.duration;
+                    }
+                });
 
-        next.addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % playlist.length;
-            video.src = playlist[currentIndex];
-            video.play();
-            playPause.textContent = '⏸';
-        });
+                // Mute/Unmute
+                mute.addEventListener('click', () => {
+                    isMuted = !isMuted;
+                    video.muted = isMuted;
+                    mute.textContent = isMuted ? '🔇 Unmute' : '🔊 Mute';
+                });
 
-        video.addEventListener('ended', () => {
-            currentIndex = (currentIndex + 1) % playlist.length;
-            video.src = playlist[currentIndex];
-            video.play();
-        });
-    </script>
+                // Fullscreen
+                fullscreen.addEventListener('click', () => {
+                    if (video.requestFullscreen) {
+                        video.requestFullscreen();
+                    } else if (video.webkitRequestFullscreen) {
+                        video.webkitRequestFullscreen();
+                    }
+                });
 
-    </div>
+                // Next button
+                next.addEventListener('click', () => {
+                    currentIndex = (currentIndex + 1) % playlist.length;
+                    loadVideo(currentIndex);
+                    video.play();
+                    playPause.textContent = '⏸';
+                });
+
+                // Auto-play next video
+                video.addEventListener('ended', () => {
+                    currentIndex = (currentIndex + 1) % playlist.length;
+                    loadVideo(currentIndex);
+                    video.play();
+                });
+
+                // Error handling
+                video.addEventListener('error', () => {
+                    console.error('Video failed to load:', playlist[currentIndex]);
+                });
+            </script>
+        </div>
     </div>
 </body>
 
