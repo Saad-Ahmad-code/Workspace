@@ -1,93 +1,137 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>My Portfolio</title>
-    <style>
-        body {
-            background-color: #f0f8ff;
-            font-family: Arial, sans-serif;
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 80%;
-            margin: auto;
-        }
-
-        table,
-        th,
-        td {
-            border: 1px solid #333;
-            padding: 10px;
-        }
-
-        img {
-            display: block;
-            margin: 20px auto;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #2980b9;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playlist Player</title>
+    <link rel="stylesheet" href="amacss.css">
 </head>
 
-<body>
-    <h1>Saad Ahmad</h1>
-    <p style="text-align:center;">I am a web developer passionate about creating interactive websites.</p>
+<body style="background-color: black;">
+    <div class="container">
+        <!-- Left navigation -->
+        <div class="sidebar">
+            <h2>Menu</h2>
+            <a href="#" data-index="0">1. Jhol</a>
+            <a href="#" data-index="1">2. Udaarian</a>
+            <a href="#" data-index="2">3. Midnight</a>
+            <a href="#" data-index="3">4. MEMORIES</a>
+            <a href="#" data-index="4">5. HUSN</a>
+            <a href="#" data-index="5">6. Paaro</a>
+            <a href="#" data-index="6">7. SAMJHO NA</a>
+            <a href="#" data-index="7">8. Finding Her</a>
+            <a href="#" data-index="8">9. Sahiba</a>
+            <a href="#" data-index="9">10. INAAM</a>
+            <a href="#" data-index="10">11. AFSOS</a>
+            <a href="#" data-index="11">12. Dil Diyan Gallan</a>
+            <a href="#" data-index="12">13. Khasara</a>
+            <a href="#" data-index="13">14. BOYFRIEND</a>
+        </div>
+    
+        <!-- Right content with music player -->
+        <div class="content" style="background-color: black;">
+            <h1>Music Player</h1>
 
-    <button onclick="toggleProjects()">Show/Hide Projects</button>
-
-    <div id="projects">
-        <h2>My Projects</h2>
-        <table>
-            <tr>
-                <th>Project Name</th>
-                <th>Description</th>
-                <th>Year</th>
-            </tr>
-            <tr>
-                <td>Portfolio Website</td>
-                <td>A personal site showcasing my work</td>
-                <td>2025</td>
-            </tr>
-            <tr>
-                <td>Blog Platform</td>
-                <td>A simple blogging system with comments</td>
-                <td>2024</td>
-            </tr>
-        </table>
+    <div class="navbar">
+        <h1 >My Playlist</h1>
     </div>
 
-    <img src="Replace brand name w.png" alt="My Profile Picture" width="200" onclick="alert('Hello! This is my profile picture.')">
+    <video id="myVideo" width="900" autoplay></video>
 
-    <p style="text-align:center;">Connect with me on
-        <a href="https://github.com" target="_blank">GitHub</a>
-    </p>
+    <div class="controls">
+        <button id="playPause" class="control-btn play-btn">⏸</button>
+        <input type="range" id="progress" value="0" max="100">
+        <button id="mute" class="control-btn">Mute</button>
+        <button id="fullscreen" class="control-btn">Fullscreen</button>
+        <button id="next" class="control-btn">Next ▶</button>
+    </div> 
 
     <script>
-        function toggleProjects() {
-            var section = document.getElementById("projects");
-            if (section.style.display === "none") {
-                section.style.display = "block";
+        const video = document.getElementById('myVideo');
+        const playPause = document.getElementById('playPause');
+        const progress = document.getElementById('progress');
+        const mute = document.getElementById('mute');
+        const fullscreen = document.getElementById('fullscreen');
+        const next = document.getElementById('next');
+
+        // 🎵 Playlist
+        const playlist = [
+            "Jhol _ Coke Studio Pakistan _ Season 15 _ Maanu x Annural Khalid.mp4",
+            "Udaarian (Badi lambi hai kahani mere pyaar di) - Satinder Sartaaj _ Love Songs _ New Punjabi Songs.mp4",
+            "Midnight Call (Official Video) - Harkirat Sangha _ Starboy X _ Rupan Bal _ Interstellar 2025.mp4",
+            "MEMORIES - Hasan Raheem ft Justin Bibis (Official Music Video) _ Latest Urdu Punjabi Song 2025.mp4",
+            "Anuv Jain - HUSN (Official Video).mp4",
+            "Aditya Rikhari - Paaro (Official Video).mp4",
+            "Aditya Rikhari - SAMJHO NA ( NASAMAJH ).mp4",
+            "Finding Her (Jana Mere Sawalon Ka Manzar Tu) _ Kushagra _ Vanshika _ Bharath _ Karan Maini _UR Debut.mp4",
+            "Sahiba (Official Music Video) _ Aditya Rikhari, Ankita Chhetri _ T-Series.mp4",
+            "Anuv Jain - INAAM (Official Lyrical Video).mp4",
+            "Anuv Jain - AFSOS ft. AP Dhillon (Official Visualizer).mp4",
+            "Dil Diyan Gallan Song _ Tiger Zinda Hai _ Salman Khan, Katrina Kaif _ Atif Aslam _ Vishal & Shekhar.mp4",
+            "Khasara – Abdul Hannan & Samar Jafri (Official Audio).mp4",
+            "BOYFRIEND(MUSIC VIDEO) KARAN AUJLA_ SUNANDA _ IKKY _ Latest Punjabi Songs 2025.mp4"
+        ];
+
+        let currentIndex = 0;
+        video.src = playlist[currentIndex];
+
+        // Sidebar click handling
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault(); // stop page reload
+                currentIndex = parseInt(link.getAttribute('data-index'));
+                video.src = playlist[currentIndex];
+                video.play();
+                playPause.textContent = '⏸';
+            });
+        });
+
+        // Existing controls...
+        playPause.addEventListener('click', () => {
+            if (video.paused) {
+                video.play();
+                playPause.textContent = '⏸';
             } else {
-                section.style.display = "none";
+                video.pause();
+                playPause.textContent = '▶';
             }
-        }
+        });
+
+        video.addEventListener('timeupdate', () => {
+            progress.value = (video.currentTime / video.duration) * 100;
+        });
+
+        progress.addEventListener('input', () => {
+            video.currentTime = (progress.value / 100) * video.duration;
+        });
+
+        mute.addEventListener('click', () => {
+            video.muted = !video.muted;
+        });
+
+        fullscreen.addEventListener('click', () => {
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            }
+        });
+
+        next.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % playlist.length;
+            video.src = playlist[currentIndex];
+            video.play();
+            playPause.textContent = '⏸';
+        });
+
+        video.addEventListener('ended', () => {
+            currentIndex = (currentIndex + 1) % playlist.length;
+            video.src = playlist[currentIndex];
+            video.play();
+        });
     </script>
+
+    </div>
+    </div>
 </body>
 
 </html>
