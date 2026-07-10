@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Portfolio</title>
+    <style>
+        body {
+            background-color: #f0f8ff;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: auto;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #333;
+            padding: 10px;
+        }
+
+        img {
+            display: block;
+            margin: 20px auto;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Jane Doe</h1>
+    <p style="text-align:center;">I am a web developer passionate about creating interactive websites.</p>
+
+    <button onclick="toggleProjects()">Show/Hide Projects</button>
+
+    <div id="projects">
+        <h2>My Projects</h2>
+        <table>
+            <tr>
+                <th>Project Name</th>
+                <th>Description</th>
+                <th>Year</th>
+            </tr>
+            <tr>
+                <td>Portfolio Website</td>
+                <td>A personal site showcasing my work</td>
+                <td>2025</td>
+            </tr>
+            <tr>
+                <td>Blog Platform</td>
+                <td>A simple blogging system with comments</td>
+                <td>2024</td>
+            </tr>
+        </table>
+    </div>
+
+    <img src="Replace brand name w.png" alt="My Profile Picture" width="200" onclick="alert('Hello! This is my profile picture.')">
+
+    <p style="text-align:center;">Connect with me on
+        <a href="https://github.com" target="_blank">GitHub</a>
+    </p>
+
+    <script>
+        function toggleProjects() {
+            var section = document.getElementById("projects");
+            if (section.style.display === "none") {
+                section.style.display = "block";
+            } else {
+                section.style.display = "none";
+            }
+        }
+    </script>
+</body>
+
+</html>
