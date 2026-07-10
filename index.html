@@ -4,180 +4,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Playlist Player</title>
-    <link rel="stylesheet" href="amacss.css">
-    <style>
-        body { margin: 0; padding: 0; }
-        video { display: block; }
-    </style>
+    <title>Music Playlist Player</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
-<body style="background-color: black;">
+<body>
     <div class="container">
-        <!-- Left navigation -->
-        <div class="sidebar">
-            <h2>Menu</h2>
-            <a href="#" data-index="0">1. Jhol</a>
-            <a href="#" data-index="1">2. Udaarian</a>
-            <a href="#" data-index="2">3. Midnight</a>
-            <a href="#" data-index="3">4. MEMORIES</a>
-            <a href="#" data-index="4">5. HUSN</a>
-            <a href="#" data-index="5">6. Paaro</a>
-            <a href="#" data-index="6">7. SAMJHO NA</a>
-            <a href="#" data-index="7">8. Finding Her</a>
-            <a href="#" data-index="8">9. Sahiba</a>
-            <a href="#" data-index="9">10. INAAM</a>
-            <a href="#" data-index="10">11. AFSOS</a>
-            <a href="#" data-index="11">12. Dil Diyan Gallan</a>
-            <a href="#" data-index="12">13. Khasara</a>
-            <a href="#" data-index="13">14. BOYFRIEND</a>
-        </div>
-    
-        <!-- Right content with music player -->
-        <div class="content" style="background-color: black;">
-            <h1>Music Player</h1>
+        <!-- Left navigation sidebar -->
+        <nav class="sidebar" role="navigation" aria-label="Playlist menu">
+            <h2>Playlist</h2>
+            <ul class="playlist-list" id="playlistMenu"></ul>
+        </nav>
 
-            <div class="navbar">
-                <h1>My Playlist</h1>
+        <!-- Right content area with player -->
+        <main class="content">
+            <header class="navbar">
+                <h1>🎵 Music Player</h1>
+            </header>
+
+            <!-- Video player -->
+            <div class="player-container">
+                <video id="myVideo" aria-label="Music player video" preload="auto"></video>
+
+                <!-- Current track info -->
+                <div class="track-info">
+                    <h2 id="currentTrack" class="track-title">Select a track</h2>
+                    <div class="time-display">
+                        <span id="currentTime">0:00</span>
+                        <span class="separator">/</span>
+                        <span id="duration">0:00</span>
+                    </div>
+                </div>
+
+                <!-- Progress bar with buffered progress -->
+                <div class="progress-container">
+                    <div class="progress-bar-wrapper">
+                        <div class="buffered-progress" id="bufferedProgress"></div>
+                        <input type="range" id="progress" class="progress-bar" min="0" max="100" value="0" 
+                               aria-label="Video progress">
+                    </div>
+                </div>
             </div>
 
-            <video id="myVideo" width="900" muted autoplay preload="metadata"></video>
-
+            <!-- Controls -->
             <div class="controls">
-                <button id="playPause" class="control-btn play-btn">⏸</button>
-                <input type="range" id="progress" value="0" max="100">
-                <button id="mute" class="control-btn">🔊 Mute</button>
-                <button id="fullscreen" class="control-btn">Fullscreen</button>
-                <button id="next" class="control-btn">Next ▶</button>
-            </div> 
+                <div class="playback-controls">
+                    <button id="prev" class="control-btn" aria-label="Previous track" title="Previous">⏮</button>
+                    <button id="playPause" class="control-btn play-btn" aria-label="Play/Pause" title="Play">▶</button>
+                    <button id="next" class="control-btn" aria-label="Next track" title="Next">⏭</button>
+                </div>
 
-            <script defer>
-                const video = document.getElementById('myVideo');
-                const playPause = document.getElementById('playPause');
-                const progress = document.getElementById('progress');
-                const mute = document.getElementById('mute');
-                const fullscreen = document.getElementById('fullscreen');
-                const next = document.getElementById('next');
+                <div class="volume-controls">
+                    <button id="mute" class="control-btn" aria-label="Mute" title="Mute">🔊</button>
+                    <input type="range" id="volume" class="volume-slider" min="0" max="100" value="100" 
+                           aria-label="Volume control">
+                </div>
 
-                // 🎵 Playlist
-                const playlist = [
-                    "Jhol _ Coke Studio Pakistan _ Season 15 _ Maanu x Annural Khalid.mp4",
-                    "Udaarian (Badi lambi hai kahani mere pyaar di) - Satinder Sartaaj _ Love Songs _ New Punjabi Songs.mp4",
-                    "Midnight Call (Official Video) - Harkirat Sangha _ Starboy X _ Rupan Bal _ Interstellar 2025.mp4",
-                    "MEMORIES - Hasan Raheem ft Justin Bibis (Official Music Video) _ Latest Urdu Punjabi Song 2025.mp4",
-                    "Anuv Jain - HUSN (Official Video).mp4",
-                    "Aditya Rikhari - Paaro (Official Video).mp4",
-                    "Aditya Rikhari - SAMJHO NA ( NASAMAJH ).mp4",
-                    "Finding Her (Jana Mere Sawalon Ka Manzar Tu) _ Kushagra _ Vanshika _ Bharath _ Karan Maini _UR Debut.mp4",
-                    "Sahiba (Official Music Video) _ Aditya Rikhari, Ankita Chhetri _ T-Series.mp4",
-                    "Anuv Jain - INAAM (Official Lyrical Video).mp4",
-                    "Anuv Jain - AFSOS ft. AP Dhillon (Official Visualizer).mp4",
-                    "Dil Diyan Gallan Song _ Tiger Zinda Hai _ Salman Khan, Katrina Kaif _ Atif Aslam _ Vishal & Shekhar.mp4",
-                    "Khasara – Abdul Hannan & Samar Jafri (Official Audio).mp4",
-                    "BOYFRIEND(MUSIC VIDEO) KARAN AUJLA_ SUNANDA _ IKKY _ Latest Punjabi Songs 2025.mp4"
-                ];
-
-                let currentIndex = 0;
-                let isMuted = true;
-                let playStarted = false;
-
-                // Initialize video with cached references
-                function loadVideo(index) {
-                    video.src = playlist[index];
-                }
-
-                // Load first video immediately
-                loadVideo(currentIndex);
-
-                // Auto-play video when ready
-                video.addEventListener('canplay', () => {
-                    if (!playStarted) {
-                        playStarted = true;
-                        video.play().catch(() => {
-                            console.log('Autoplay prevented by browser policy');
-                        });
-                    }
-                }, { once: true });
-
-                // Sidebar click handling - delegated
-                const sidebarLinks = document.querySelectorAll('.sidebar a');
-                sidebarLinks.forEach(link => {
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        currentIndex = parseInt(link.getAttribute('data-index'));
-                        loadVideo(currentIndex);
-                        video.play();
-                        playPause.textContent = '⏸';
-                    });
-                });
-
-                // Play/Pause
-                playPause.addEventListener('click', () => {
-                    if (video.paused) {
-                        video.play();
-                        playPause.textContent = '⏸';
-                    } else {
-                        video.pause();
-                        playPause.textContent = '▶';
-                    }
-                });
-
-                // Update progress bar - throttled
-                let updateTimeout;
-                video.addEventListener('timeupdate', () => {
-                    clearTimeout(updateTimeout);
-                    updateTimeout = setTimeout(() => {
-                        if (video.duration) {
-                            progress.value = (video.currentTime / video.duration) * 100;
-                        }
-                    }, 100);
-                });
-
-                // Seek on progress bar input
-                progress.addEventListener('input', () => {
-                    if (video.duration) {
-                        video.currentTime = (progress.value / 100) * video.duration;
-                    }
-                });
-
-                // Mute/Unmute
-                mute.addEventListener('click', () => {
-                    isMuted = !isMuted;
-                    video.muted = isMuted;
-                    mute.textContent = isMuted ? '🔇 Unmute' : '🔊 Mute';
-                });
-
-                // Fullscreen
-                fullscreen.addEventListener('click', () => {
-                    if (video.requestFullscreen) {
-                        video.requestFullscreen();
-                    } else if (video.webkitRequestFullscreen) {
-                        video.webkitRequestFullscreen();
-                    }
-                });
-
-                // Next button
-                next.addEventListener('click', () => {
-                    currentIndex = (currentIndex + 1) % playlist.length;
-                    loadVideo(currentIndex);
-                    video.play();
-                    playPause.textContent = '⏸';
-                });
-
-                // Auto-play next video
-                video.addEventListener('ended', () => {
-                    currentIndex = (currentIndex + 1) % playlist.length;
-                    loadVideo(currentIndex);
-                    video.play();
-                });
-
-                // Error handling
-                video.addEventListener('error', () => {
-                    console.error('Video failed to load:', playlist[currentIndex]);
-                });
-            </script>
-        </div>
+                <div class="utility-controls">
+                    <button id="fullscreen" class="control-btn" aria-label="Fullscreen" title="Fullscreen">⛶</button>
+                </div>
+            </div>
+        </main>
     </div>
+
+    <script src="player.js" defer></script>
 </body>
 
 </html>
