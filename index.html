@@ -4,8 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Optimize: Preconnect to video sources -->
+    <link rel="preconnect" href="https://github.com">
+    <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
+    
     <title>Music Playlist Player</title>
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Optimize: Inline critical CSS to reduce render-blocking -->
+    <style>
+        body { margin: 0; padding: 0; background: #000; }
+        video { display: block; }
+        .container { display: flex; height: 100vh; overflow: hidden; }
+    </style>
 </head>
 
 <body>
@@ -24,7 +36,12 @@
 
             <!-- Video player -->
             <div class="player-container">
-                <video id="myVideo" aria-label="Music player video" preload="auto"></video>
+                <!-- Optimize: Explicit dimensions, preload=auto for fastest loading -->
+                <video id="myVideo" 
+                       aria-label="Music player video" 
+                       preload="auto"
+                       crossorigin="anonymous"
+                       muted></video>
 
                 <!-- Current track info -->
                 <div class="track-info">
@@ -67,6 +84,7 @@
         </main>
     </div>
 
+    <!-- Optimize: Load script with async and resource hints -->
     <script src="player.js" defer></script>
 </body>
 
