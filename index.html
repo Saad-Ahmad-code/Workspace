@@ -84,6 +84,11 @@
 
                 loadVideo(currentIndex);
 
+                // Auto-play video when metadata is loaded
+                video.addEventListener('canplay', () => {
+                    video.play();
+                });
+
                 // Sidebar click handling
                 document.querySelectorAll('.sidebar a').forEach(link => {
                     link.addEventListener('click', (e) => {
